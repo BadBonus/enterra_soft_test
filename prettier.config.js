@@ -1,0 +1,17 @@
+module.exports = {
+  printWidth: 100,
+  singleQuote: false,
+  jsxSingleQuote: false,
+  trailingComma: "all",
+  jsxBracketSpacing: false,
+  jsxBracketSameLine: false,
+  tabWidth: 2,
+  semi: true,
+  endOfLine: "auto",
+  jsxEndOfLine: "auto",
+  bracketSameLine: false,
+  proseWrap: "always",
+  bracketSpacing: true,
+  "no-space-before-commas": true,
+  singleAttributePerLine: true,
+};
