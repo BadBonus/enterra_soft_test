@@ -16,12 +16,27 @@ const routes = [
     path: "/home",
     name: "home",
     component: () => import("../views/HomePage.vue"),
+    meta: { requiresAuth: true },
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const loggedIn = localStorage.getItem("user") ?? false;
+
+  const { name } = to;
+
+  if (name === "login" && loggedIn) next("/home");
+
+  if (to.matched.some((record) => record.meta.requiresAuth) && !loggedIn) {
+    next("/");
+  } else {
+    next();
+  }
 });
 
 export default router;
