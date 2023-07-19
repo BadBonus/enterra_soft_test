@@ -1,7 +1,10 @@
 <script setup>
 import { defineOptions, ref } from "vue";
+import { useRouter } from "vue-router";
 import { signIn } from "@/services/Auth";
 import { notify } from "@kyvg/vue3-notification";
+
+const router = useRouter();
 
 defineOptions({ name: "LoginPage" });
 
@@ -14,15 +17,8 @@ const sign = (e) => {
   isLoading.value = true;
 
   signIn({ login: login.value, password: password.value })
-    .then((answer) => {
-      if (!answer) {
-        return;
-      }
-
-      const userData = answer.data.data[0];
-      localStorage.setItem("token", userData.attributes.token);
-      localStorage.setItem("refresh-token", userData.attributes["refresh-token"]);
-      localStorage.setItem("user", userData.id);
+    .then(() => {
+      router.push("/home");
     })
     .finally(() => {
       isLoading.value = false;

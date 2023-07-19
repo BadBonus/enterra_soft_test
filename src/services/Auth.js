@@ -8,6 +8,22 @@ export const signIn = ({ login, password }) => {
       login,
       password,
     })
+    .then((answer) => {
+      if (!answer) {
+        return;
+      }
+
+      const userData = answer.data.data[0];
+      localStorage.setItem("token", userData.attributes.token);
+      localStorage.setItem("refresh-token", userData.attributes["refresh-token"]);
+      localStorage.setItem("user", userData.id);
+      localStorage.setItem("startTimeOfToken", new Date());
+
+      notify({
+        title: "Авторизация",
+        text: "Авторизация прошла успешно! Добро пожаловать!",
+      });
+    })
     .catch((err) => {
       notify({
         title: "Authorization",
@@ -17,6 +33,31 @@ export const signIn = ({ login, password }) => {
     });
 };
 
-export const updateToken = (credentials) => {
-  return Api().post("auth/token?clientId=default", credentials);
+export const refresh = () => {
+  return Api()
+    .post(
+      "auth/token?clientId=default",
+      {
+        clientId: "default",
+        refreshToken: localStorage.getItem("refresh-token"),
+      },
+      {
+        "User-Agent": "Axios",
+        headers: {
+          Authorization: null,
+        },
+      },
+    )
+    .then(({ data }) => {
+      localStorage.setItem("token", data["token"]);
+      localStorage.setItem("refresh-token", data["refresh-token"]);
+      localStorage.setItem("startTimeOfToken", new Date());
+    })
+    .catch((err) => {
+      notify({
+        title: "Authorization",
+        text: err.message + " : " + "refresh token error",
+        type: "error",
+      });
+    });
 };

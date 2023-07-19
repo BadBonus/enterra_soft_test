@@ -1,5 +1,24 @@
+<script setup>
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const logOut = () => {
+  localStorage.clear();
+  router.push("/");
+};
+const isLogged = ref(localStorage.getItem("token"));
+</script>
+
 <template>
   <notifications />
+  <button
+    v-if="isLogged"
+    @click="logOut"
+  >
+    Exit
+  </button>
   <router-view />
 </template>
 
