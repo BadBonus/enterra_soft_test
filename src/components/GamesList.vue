@@ -1,63 +1,87 @@
 <script setup>
-import { defineOptions, defineProps, defineEmits, ref, computed } from "vue";
+import { ref, toRefs, computed, reactive } from "vue";
+import { getListOfGames, getLinkOfGame } from "@/services/BaseRequests";
 import CardGame from "./CardGame";
 
-defineOptions({ name: "GamesList" });
-const props = defineProps({
-  games: {
-    type: Array,
-    default: () => [],
-  },
-});
-const emit = defineEmits(["action"]);
+const games = ref([]);
+const isLoadingGames = ref(true);
+const currentPage = ref(0);
+const maxCountOfPages = ref(0);
 
-const pageOfGames = ref(0);
+const getGames = (numberPage) => {
+  if (!games.value[numberPage] || !games.value[numberPage].length) {
+    isLoadingGames.value = true;
+    getListOfGames(numberPage)
+      .then(({ data }) => {
+        games.value[numberPage] = data?.data ?? [];
+        currentPage.value = numberPage;
+        maxCountOfPages.value = data.meta["page-count"];
+      })
+      .finally(() => (isLoadingGames.value = false));
+  } else {
+    currentPage.value = numberPage;
+  }
+};
+
+const gameRequest = (id) => {
+  getLinkOfGame(id).then(({ data }) => {
+    const gameUrl = data.data[0].attributes["launch-options"]["game-url"];
+    const gameName = data.data[0].attributes["type"];
+
+    window.open(gameUrl, gameName);
+  });
+};
 
 const publishGames = computed(() => {
-  const start = 15 * pageOfGames.value;
-  return props.games.slice(start, start + 15).map(({ id, attributes: { image, title } }) => ({
+  return games.value[currentPage.value].map(({ id, attributes: { image, title } }) => ({
     id,
     image,
     title,
   }));
 });
-const changeStep = (step) => (pageOfGames.value += step);
+
+getGames(1);
 </script>
 
 <template>
-  <div class="gamesList">
+  <h1 v-if="isLoadingGames">Loading...</h1>
+
+  <div
+    class="gamesList"
+    v-if="!isLoadingGames"
+  >
     <CardGame
       v-for="item in publishGames"
       :key="item.id"
       :image="item.image"
       :title="item.title"
-      @click="emit('action', item.id)"
+      @click="gameRequest(item.id)"
     >
     </CardGame>
     <div class="controlBlock">
       <button
-        :disabled="pageOfGames <= 0"
-        @click="changeStep(-1)"
+        :disabled="currentPage <= 1"
+        @click="getGames(currentPage - 1)"
       >
         &larr;
       </button>
       <button
-        :disabled="publishGames.length < 15"
-        @click="changeStep(1)"
+        :disabled="currentPage >= maxCountOfPages"
+        @click="getGames(currentPage + 1)"
       >
         &rarr;
       </button>
     </div>
     <div class="controlBlock">
       <button
-        :disabled="pageOfGames <= 0"
-        @click="changeStep(-1)"
+        :disabled="currentPage <= 1"
+        @click="getGames(currentPage - 1)"
       >
         &larr;
       </button>
       <button
-        :disabled="publishGames.length < 15"
-        @click="changeStep(1)"
+        :disabled="currentPage >= maxCountOfPages"
+        @click="getGames(currentPage + 1)"
       >
         &rarr;
       </button>
@@ -111,6 +135,21 @@ const changeStep = (step) => (pageOfGames.value += step);
         pointer-events: none;
       }
     }
+  }
+}
+
+h1 {
+  margin-top: 70px;
+  height: 40px;
+  animation: 1s linear 0s infinite roundMeBaby;
+}
+
+@keyframes roundMeBaby {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 </style>

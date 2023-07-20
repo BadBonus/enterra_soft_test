@@ -17,7 +17,7 @@ const action = async () => {
   isLoading.value = true;
 
   await emit("request", user.value.login, user.value.password);
-  isLoading.value = true;
+  isLoading.value = false;
 };
 </script>
 

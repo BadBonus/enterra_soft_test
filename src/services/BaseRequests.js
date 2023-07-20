@@ -15,9 +15,11 @@ export const getBalance = () => {
     .get(`v2/users/me/balance?clientId=default&auth=${token}`)
     .catch((err) => errorMessage(err));
 };
-export const getListOfGames = () => {
+export const getListOfGames = (pageNumber = 1) => {
+  const url = `casino/game-list?clientId=default%3Fpage%3D1%3FperPage%3D30&page=${pageNumber}&per-page=15`;
+
   return Api()
-    .get("casino/game-list?clientId=default%3Fpage%3D1%3FperPage%3D30&page=1&per-page=15")
+    .get(url)
     .catch((err) => errorMessage(err));
 };
 export const getLinkOfGame = (id) => {

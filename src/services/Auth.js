@@ -22,10 +22,10 @@ export const signIn = ({ login, password }) => {
         text: "Авторизация прошла успешно! Добро пожаловать!",
       });
     })
-    .catch((err) => {
+    .catch(({ response }) => {
       notify({
         title: "Authorization",
-        text: err.message,
+        text: response.data.errors[0].detail,
         type: "error",
       });
     });
