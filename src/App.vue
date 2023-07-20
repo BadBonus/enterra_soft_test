@@ -24,4 +24,9 @@ nav {
     }
   }
 }
+
+button,
+input[type="submit"] {
+  cursor: pointer !important;
+}
 </style>
