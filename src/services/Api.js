@@ -1,4 +1,5 @@
 import axios from "axios";
+import { clearUser } from "@/helpers/user.js";
 
 const baseURL = process.env.VUE_APP_BASE_URL;
 
@@ -10,18 +11,13 @@ export default () => {
       Accept: "application/json",
     },
   });
-  // const token = localStorage.getItem("token"); // token для получения ответов с сервера не требуется, как оказалось
-
-  // if (token) {
-  //   axiosInstance.defaults.headers.common.Authorization = `${token}`;
-  // }
 
   axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
       console.log(error);
       if (error.response.status === 401) {
-        localStorage.clear();
+        clearUser();
         location.reload();
       }
       return Promise.reject(error);

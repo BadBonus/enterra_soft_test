@@ -1,4 +1,5 @@
 import Api from "./Api";
+import { setUser, getUserItem, initUser } from "@/helpers/user.js";
 import { notify } from "@kyvg/vue3-notification";
 
 export const signIn = ({ login, password }) => {
@@ -14,10 +15,7 @@ export const signIn = ({ login, password }) => {
       }
 
       const userData = answer.data.data[0];
-      localStorage.setItem("token", userData.attributes.token);
-      localStorage.setItem("refresh-token", userData.attributes["refresh-token"]);
-      localStorage.setItem("user", userData.id);
-      localStorage.setItem("startTimeOfToken", new Date());
+      initUser(userData.attributes.token, userData.id, userData.attributes["refresh-token"]);
 
       notify({
         title: "Авторизация",
@@ -39,7 +37,7 @@ export const refresh = () => {
       "auth/token?clientId=default",
       {
         clientId: "default",
-        refreshToken: localStorage.getItem("refresh-token"),
+        refreshToken: getUserItem("refresh-token"),
       },
       {
         "User-Agent": "Axios",
@@ -49,9 +47,7 @@ export const refresh = () => {
       },
     )
     .then(({ data }) => {
-      localStorage.setItem("token", data["token"]);
-      localStorage.setItem("refresh-token", data["refresh-token"]);
-      localStorage.setItem("startTimeOfToken", new Date());
+      setUser(data["token"], data["refresh-token"]);
     })
     .catch((err) => {
       notify({

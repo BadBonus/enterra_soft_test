@@ -1,4 +1,5 @@
 import router from "../router";
+import { clearUser } from "./user";
 
 export const isTimeForRefresh = (endTime) => {
   const currentDifference = +((new Date() - new Date(endTime)) / (1000 * 60)).toFixed(1);
@@ -9,6 +10,6 @@ export const isTimeForRefresh = (endTime) => {
 };
 
 export const logOut = () => {
-  localStorage.clear();
+  clearUser();
   router.push("/");
 };

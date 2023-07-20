@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { getUserItem } from "@/helpers/user.js";
 import LoginPage from "../views/LoginPage.vue";
 
 const routes = [
@@ -26,8 +27,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const loggedIn = localStorage.getItem("user") ?? false;
-
+  const loggedIn = getUserItem("user") ?? false;
   const { name } = to;
 
   if (name === "login" && loggedIn) next("/home");

@@ -1,9 +1,10 @@
 import { refresh } from "./Auth";
 import { isTimeForRefresh } from "@/helpers";
+import { getUserItem } from "@/helpers/user.js";
 
 // проверка на инициализации страницы
 const logicOfRefreshToken = () => {
-  const savedTime = localStorage.getItem("startTimeOfToken") ?? null;
+  const savedTime = getUserItem("startTimeOfToken") ?? null;
 
   if (savedTime) {
     if (isTimeForRefresh(savedTime)) {
