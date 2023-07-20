@@ -1,6 +1,6 @@
 <script setup>
 import { defineOptions } from "vue";
-import { logOut } from "@/helpers";
+import { logOut } from "@/helpers/user";
 import Balance from "@/components/Balance";
 import GamesList from "@/components/GamesList";
 

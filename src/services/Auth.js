@@ -33,19 +33,10 @@ export const signIn = ({ login, password }) => {
 
 export const refresh = () => {
   return Api()
-    .post(
-      "auth/token?clientId=default",
-      {
-        clientId: "default",
-        refreshToken: getUserItem("refresh-token"),
-      },
-      {
-        "User-Agent": "Axios",
-        headers: {
-          Authorization: null,
-        },
-      },
-    )
+    .post("auth/token?clientId=default", {
+      clientId: "default",
+      refreshToken: getUserItem("refresh-token"),
+    })
     .then(({ data }) => {
       setUser(data["token"], data["refresh-token"]);
     })
