@@ -13,7 +13,7 @@ defineProps({
     <span class="cardGame__label">{{ title }}</span>
     <img
       :src="image"
-      :alt="label"
+      :alt="title"
       loading="lazy"
       :onload="(e) => e.target.classList.add('loaded')"
     />
@@ -34,10 +34,24 @@ defineProps({
   margin: 4px;
   border: 2px solid black;
   width: 100%;
+  transition: 0.3s;
+
+  &:hover {
+    background: rgb(212, 90, 90);
+    color: #fff;
+
+    button {
+      color: #fff;
+    }
+  }
 
   button {
     height: 30px;
     cursor: pointer;
+    background: unset;
+    border: none;
+    border-top: 2px solid black;
+    transition: 0.3s;
   }
 
   img {

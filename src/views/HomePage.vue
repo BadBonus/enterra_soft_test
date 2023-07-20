@@ -44,6 +44,14 @@ const publishGames = computed(() => {
 });
 
 const changeStep = (step) => (pageOfGames.value += step);
+const gameRequest = (id) => {
+  getLinkOfGame(id).then(({ data }) => {
+    const gameUrl = data.data[0].attributes["launch-options"]["game-url"];
+    const gameName = data.data[0].attributes["type"];
+
+    window.open(gameUrl, gameName);
+  });
+};
 </script>
 
 <template>
@@ -55,6 +63,7 @@ const changeStep = (step) => (pageOfGames.value += step);
           :key="item.id"
           :image="item.image"
           :title="item.title"
+          @click="gameRequest(item.id)"
         >
         </CardGame>
       </template>

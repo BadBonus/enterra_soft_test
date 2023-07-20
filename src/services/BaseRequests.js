@@ -7,6 +7,6 @@ export const getBalance = () => {
 export const getListOfGames = () => {
   return Api().get("v2/casino/games?clientId=default", {});
 };
-export const getLinkOfGame = (data) => {
-  return Api().post("v2/casino/games?clientId=default", data);
+export const getLinkOfGame = (id) => {
+  return Api().post(`/v2/casino/games/${id}/session-demo?clientId=default`);
 };
