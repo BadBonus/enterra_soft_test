@@ -1,41 +1,20 @@
 <script setup>
-import { defineOptions, ref, computed } from "vue";
-import { getBalance, getListOfGames, getLinkOfGame } from "@/services/BaseRequests";
+import { defineOptions, ref } from "vue";
+import { getListOfGames, getLinkOfGame } from "@/services/BaseRequests";
 import { logOut } from "@/helpers";
-import SideBar from "@/components/SideBar";
+import Balance from "@/components/Balance";
 import GamesList from "@/components/GamesList";
 
 defineOptions({ name: "HomePage" });
 
-const balance = ref(null);
 const games = ref(null);
 const isLoadingGames = ref(true);
-const isLoadingBalance = ref(true);
-
-getBalance()
-  .then(({ data }) => {
-    balance.value = data;
-  })
-  .finally(() => (isLoadingBalance.value = false));
-
-setInterval(() => {
-  getBalance().then(({ data }) => (balance.value = data));
-}, 30_000);
 
 getListOfGames()
   .then(({ data }) => {
     games.value = data?.data ?? [];
   })
   .finally(() => (isLoadingGames.value = false));
-
-const publishBalance = computed(() => {
-  const data = balance.value?.data ?? [];
-  return data.map(({ id, attributes: { currency, available: value } }) => ({
-    id,
-    currency,
-    value,
-  }));
-});
 
 const gameRequest = (id) => {
   getLinkOfGame(id).then(({ data }) => {
@@ -64,10 +43,7 @@ const gameRequest = (id) => {
 
       <h1 v-if="isLoadingGames">Loading...</h1>
     </main>
-    <SideBar
-      :isLoading="isLoadingBalance"
-      :balance="publishBalance"
-    />
+    <Balance />
   </div>
 </template>
 
