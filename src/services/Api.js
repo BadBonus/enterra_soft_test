@@ -10,7 +10,7 @@ export default () => {
       Accept: "application/json",
     },
   });
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token"); // token для получения ответов с сервера не требуется, как оказалось
 
   // if (token) {
   //   axiosInstance.defaults.headers.common.Authorization = `${token}`;

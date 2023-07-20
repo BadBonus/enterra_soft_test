@@ -1,10 +1,13 @@
 <script setup>
 import { defineOptions, ref, computed } from "vue";
 import { getBalance, getListOfGames, getLinkOfGame } from "@/services/BaseRequests";
+import { useRouter } from "vue-router";
 import SideBar from "@/components/SideBar";
 import CardGame from "@/components/CardGame";
 
 defineOptions({ name: "HomePage" });
+
+const router = useRouter();
 
 const balance = ref(null);
 const games = ref(null);
@@ -33,6 +36,11 @@ const publishBalance = computed(() => {
   }));
 });
 
+const logOut = () => {
+  localStorage.clear();
+  router.push("/");
+};
+
 const publishGames = computed(() => {
   const data = games.value?.data ?? [];
   const start = 15 * pageOfGames.value;
@@ -55,6 +63,12 @@ const gameRequest = (id) => {
 </script>
 
 <template>
+  <button
+    @click="logOut"
+    class="leaveBtn"
+  >
+    Exit
+  </button>
   <div class="flexWrapper">
     <main>
       <template v-if="!isLoadingGames">
@@ -174,6 +188,25 @@ aside {
       opacity: 0.5;
       pointer-events: none;
     }
+  }
+}
+
+.leaveBtn {
+  margin-bottom: 12px;
+  display: block;
+  width: 55px;
+  height: 35px;
+  border: 2px dashed black;
+  border-radius: 100px;
+  margin-left: auto;
+  margin-right: 4px;
+  background: none;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+  &:hover {
+    transform: scale(1.2);
   }
 }
 
